@@ -1,20 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View } from "react-native";
+import Carousel from "./components/Carousel";
 
+const data = [
+    {
+        source: require("./assets/icon.png"),
+    },
+    {
+        source: require("./assets/icon.png"),
+    },
+    {
+        source: require("./assets/icon.png"),
+    },
+    {
+        source: require("./assets/icon.png"),
+    },
+    {
+        source: require("./assets/icon.png"),
+    },
+    {
+        source: require("./assets/icon.png"),
+    },
+];
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <Carousel data={data} />
+            <StatusBar style='light' />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "#111",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: 130,
+    },
 });
