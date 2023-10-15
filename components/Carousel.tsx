@@ -26,20 +26,20 @@ const Carousel = ({ data }: { data: { source: any }[] }) => {
         },
     });
     useEffect(() => {
-        const interval = setInterval(() => {
-            x.value += width;
-            if (x.value >= (data.length - 1) * SIZE) {
-                x.value = 0;
-                scrollViewRef.current?.scrollTo({ x: 0, animated: true });
-            } else {
-                scrollViewRef.current?.scrollTo({ x: x.value, animated: true });
-            }
-            // console.log(x.value);
-        }, 3000);
-        return () => {
-            clearInterval(interval);
-            x.value = 0;
-        };
+        // const interval = setInterval(() => {
+        //     x.value += width;
+        //     if (x.value >= (data.length - 1) * SIZE) {
+        //         x.value = 0;
+        //         scrollViewRef.current?.scrollTo({ x: 0, animated: true });
+        //     } else {
+        //         scrollViewRef.current?.scrollTo({ x: x.value, animated: true });
+        //     }
+        //     // console.log(x.value);
+        // }, 3000);
+        // return () => {
+        //     clearInterval(interval);
+        //     x.value = 0;
+        // };
     }, []);
     return (
         <View style={{}}>

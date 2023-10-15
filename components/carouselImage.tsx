@@ -1,8 +1,8 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, ImageSourcePropType } from "react-native";
 import React from "react";
 import { SharedValue } from "react-native-reanimated";
 interface ImageInterface {
-    item: { source: any };
+    item: { source: ImageSourcePropType };
     // x: SharedValue<number>;
     size: number;
     index: number;
