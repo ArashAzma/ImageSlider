@@ -14,9 +14,6 @@ const data = [
     {
         source: require("./assets/icon.png"),
     },
-    {
-        source: require("./assets/icon.png"),
-    },
 ];
 function App() {
     return (

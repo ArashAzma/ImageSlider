@@ -65,9 +65,12 @@ const HorizontalSheet = ({ data }: HorizontalSheetInterface) => {
             ) {
                 translateX.value = withSpring(0, { damping: 100 });
             } else {
-                translateX.value = withSpring(translateX.value - width, {
-                    damping: 100,
-                });
+                translateX.value = withSpring(
+                    Math.max(translateX.value - width, ImageScrollWidth * -1),
+                    {
+                        damping: 100,
+                    }
+                );
             }
         }, 4000);
         return () => clearInterval(interval);
@@ -91,7 +94,11 @@ const HorizontalSheet = ({ data }: HorizontalSheetInterface) => {
                             { width: data.length * BUTTONWIDTH },
                         ]}
                     >
-                        <SheetButtons data={data} BUTTONWIDTH={BUTTONWIDTH} />
+                        <SheetButtons
+                            data={data}
+                            BUTTONWIDTH={BUTTONWIDTH}
+                            translateX={translateX}
+                        />
                         <Animated.View
                             style={[
                                 styles.button,
