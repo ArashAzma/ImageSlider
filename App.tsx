@@ -14,18 +14,26 @@ const data = [
     {
         source: require("./assets/icon.png"),
     },
+    {
+        source: require("./assets/icon.png"),
+    },
 ];
-export default function App() {
+function App() {
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <View style={styles.container}>
-                {/* <Carousel data={data} /> */}
-                <HorizontalSheet data={data} />
-                <StatusBar style='light' />
-            </View>
-        </GestureHandlerRootView>
+        <View style={styles.container}>
+            {/* <Carousel data={data} /> */}
+            <HorizontalSheet data={data} />
+            <StatusBar style='light' />
+        </View>
     );
 }
+export default () => {
+    return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <App />
+        </GestureHandlerRootView>
+    );
+};
 const styles = StyleSheet.create({
     container: {
         flex: 1,

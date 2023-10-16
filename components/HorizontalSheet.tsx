@@ -1,24 +1,26 @@
 import {
     View,
-    Text,
     Dimensions,
     StyleSheet,
-    Image,
     ImageSourcePropType,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
     withSpring,
 } from "react-native-reanimated";
+import SheetImages from "./SheetImages";
+import SheetButtons from "./SheetButtons";
 const { width } = Dimensions.get("window");
-interface HorizontalSheetInterface {
+export interface HorizontalSheetInterface {
     data: { source: ImageSourcePropType }[];
 }
+const BUTTONWIDTH = 30;
+const NEXTIMAGESLIDEPERCENTAGE = 0.65;
+const PREVIOUSIMAGESLIDEPERCENTAGE = 0.35;
 const HorizontalSheet = ({ data }: HorizontalSheetInterface) => {
-    const [activeImageIndex, setActiveImageIndex] = useState(0);
     const translateX = useSharedValue(0);
     const context = useSharedValue({ x: 0 });
     const ImageScrollWidth = data.length * width;
@@ -28,34 +30,34 @@ const HorizontalSheet = ({ data }: HorizontalSheetInterface) => {
         })
         .onUpdate((event) => {
             translateX.value = event.translationX + context.value.x;
-            const index = Math.floor(Math.abs(translateX.value) / width);
-            // console.log(index);
-            // if (index !== activeImageIndex) {
-            //     setActiveImageIndex(index);
-            // }
         })
         .onEnd(() => {
             const maxIndex = data.length - 1;
             const divide = (translateX.value / width) * -1;
             let activeImageIndex = Math.floor(divide);
             const s = divide - Math.floor(divide);
-            if (s >= 0.65) {
+            if (s >= NEXTIMAGESLIDEPERCENTAGE) {
                 activeImageIndex = Math.min(maxIndex, activeImageIndex + 1);
-            } else if (s <= 0.35) {
+            } else if (s <= PREVIOUSIMAGESLIDEPERCENTAGE) {
                 activeImageIndex = Math.max(0, activeImageIndex - 1);
             } else {
                 activeImageIndex = Math.max(0, activeImageIndex);
             }
             const targetX = -activeImageIndex * width;
-            // setActiveImageIndex(activeImageIndex);
             translateX.value = withSpring(targetX, { damping: 100 });
         });
 
     const ViewStyle = useAnimatedStyle(() => {
         return { transform: [{ translateX: translateX.value }] };
     });
+    const ButtonStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                { translateX: (translateX.value / width) * -BUTTONWIDTH },
+            ],
+        };
+    });
     useEffect(() => {
-        console.log(ImageScrollWidth);
         const interval = setInterval(() => {
             if (
                 Math.abs(translateX.value) <= ImageScrollWidth &&
@@ -75,70 +77,62 @@ const HorizontalSheet = ({ data }: HorizontalSheetInterface) => {
             <Animated.View style={{ flex: 1, width: "100%" }}>
                 <Animated.View
                     style={[
-                        styles.style1,
+                        styles.imageSlider,
                         ViewStyle,
                         { height: width, width: ImageScrollWidth },
                     ]}
                 >
-                    {data?.map((item, index) => {
-                        return (
-                            <Image
-                                source={item.source}
-                                style={styles.image}
-                                key={index}
-                            />
-                        );
-                    })}
+                    <SheetImages data={data} />
                 </Animated.View>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        width: "100%",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    {/* {data?.map((item, index) => {
-                        return (
-                            <View
-                                style={[
-                                    styles.button,
-                                    {
-                                        backgroundColor:
-                                            index === activeImageIndex
-                                                ? "red"
-                                                : "white",
-                                    },
-                                ]}
-                            />
-                        );
-                    })} */}
+                <View style={styles.buttonContainer}>
+                    <View
+                        style={[
+                            styles.buttonsSlider,
+                            { width: data.length * BUTTONWIDTH },
+                        ]}
+                    >
+                        <SheetButtons data={data} BUTTONWIDTH={BUTTONWIDTH} />
+                        <Animated.View
+                            style={[
+                                styles.button,
+                                ButtonStyle,
+                                {
+                                    backgroundColor: "skyblue",
+                                    position: "absolute",
+                                    left: 0,
+                                },
+                            ]}
+                        />
+                    </View>
                 </View>
             </Animated.View>
         </GestureDetector>
     );
 };
 const styles = StyleSheet.create({
-    style1: {
+    imageSlider: {
         flexDirection: "row",
         borderRadius: 40,
         position: "absolute",
         left: 0,
         top: 100,
     },
-    image: {
-        width,
-        height: width,
-        borderRadius: 25,
+    buttonContainer: {
+        flexDirection: "row",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
     },
-    text: {
-        color: "white",
-        fontSize: 30,
+    buttonsSlider: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
     },
     button: {
-        width: 30,
+        width: BUTTONWIDTH,
         height: 30,
         borderRadius: 15,
+        backgroundColor: "white",
     },
 });
 
